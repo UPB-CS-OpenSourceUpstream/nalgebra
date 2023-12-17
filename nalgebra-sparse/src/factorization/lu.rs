@@ -10,7 +10,9 @@ pub struct LuDecomposition<T> {
 }
 
 impl<T: RealField> LuDecomposition<T>
-where T: Div<T, Output = T> + SubAssign + Copy {
+where
+    T: Div<T, Output = T> + SubAssign + Copy,
+{
     /// Computes the LU decomposition of a given square matrix.
     pub fn decompose(matrix: &DMatrix<T>) -> Result<Self, Box<dyn Error>> {
         if matrix.nrows() != matrix.ncols() {
@@ -24,12 +26,16 @@ where T: Div<T, Output = T> + SubAssign + Copy {
         // LU decomposition algorithm
         for i in 0..n {
             for j in 0..=i {
-                let sum: T = (0..j).map(|k| l[(i, k)] * u[(k, j)]).fold(T::zero(), |acc, x| acc + x);
+                let sum: T = (0..j)
+                    .map(|k| l[(i, k)] * u[(k, j)])
+                    .fold(T::zero(), |acc, x| acc + x);
                 l[(i, j)] = u[(i, j)] - sum;
             }
 
-            for j in (i+1)..n {
-                let sum: T = (0..i).map(|k| l[(i, k)] * u[(k, j)]).fold(T::zero(), |acc, x| acc + x);
+            for j in (i + 1)..n {
+                let sum: T = (0..i)
+                    .map(|k| l[(i, k)] * u[(k, j)])
+                    .fold(T::zero(), |acc, x| acc + x);
                 if l[(i, i)].is_zero() {
                     return Err("Matrix is singular and cannot be decomposed".into());
                 }
@@ -65,14 +71,36 @@ mod tests {
 
     #[test]
     fn test_lu_decomposition() {
-        let matrix = DMatrix::from_row_slice(3, 3, &[2.0, 3.0, 1.0, 4.0, 1.0, -1.0, -1.0, 3.0, 2.0]);
+        let matrix =
+            DMatrix::from_row_slice(3, 3, &[2.0, 3.0, 1.0, 4.0, 1.0, -1.0, -1.0, 3.0, 2.0]);
         let lu = LuDecomposition::decompose(&matrix).unwrap();
-        
+
         // Print L and U matrices
         let l = lu.l();
         let u = lu.u();
-        assert_equal(l.iter(), DMatrix::from_row_slice(3, 3, &[2.0, 0.0, 0.0, 4.0, -5.0, 0.0, -1.0, 4.5, -0.19999999999999973]).iter());
-        assert_equal(u.iter(), DMatrix::from_row_slice(3, 3, &[2.0, 1.5, 0.5, 4.0, 1.0, 0.6, -1.0, 3.0, 2.0]).iter());
+        assert_equal(
+            l.iter(),
+            DMatrix::from_row_slice(
+                3,
+                3,
+                &[
+                    2.0,
+                    0.0,
+                    0.0,
+                    4.0,
+                    -5.0,
+                    0.0,
+                    -1.0,
+                    4.5,
+                    -0.19999999999999973,
+                ],
+            )
+            .iter(),
+        );
+        assert_equal(
+            u.iter(),
+            DMatrix::from_row_slice(3, 3, &[2.0, 1.5, 0.5, 4.0, 1.0, 0.6, -1.0, 3.0, 2.0]).iter(),
+        );
     }
 
     #[test]
@@ -91,13 +119,19 @@ mod tests {
 
     #[test]
     fn test_lu_decomposition_identity() {
-        let matrix = DMatrix::from_row_slice(3, 3, &[1.0, 0.0, 0.0, 0.0, 1.0, 0.0,0.0, 0.0, 1.0]);
+        let matrix = DMatrix::from_row_slice(3, 3, &[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]);
         let lu = LuDecomposition::decompose(&matrix).unwrap();
-        
+
         // Print L and U matrices
         let l = lu.l();
         let u = lu.u();
-        assert_equal(l.iter(), DMatrix::from_row_slice(3, 3, &[1.0, 0.0, 0.0, 0.0, 1.0, 0.0,0.0, 0.0, 1.0]).iter());
-        assert_equal(u.iter(), DMatrix::from_row_slice(3, 3, &[1.0, 0.0, 0.0, 0.0, 1.0, 0.0,0.0, 0.0, 1.0]).iter());
+        assert_equal(
+            l.iter(),
+            DMatrix::from_row_slice(3, 3, &[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]).iter(),
+        );
+        assert_equal(
+            u.iter(),
+            DMatrix::from_row_slice(3, 3, &[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]).iter(),
+        );
     }
 }
