@@ -414,6 +414,8 @@ where
     }
 
     /// Creates a new rotation from Euler angles.
+    /// 
+    /// Note that the angles are expressed in radians.
     ///
     /// The primitive rotations are applied in order: 1 roll − 2 pitch − 3 yaw.
     ///
