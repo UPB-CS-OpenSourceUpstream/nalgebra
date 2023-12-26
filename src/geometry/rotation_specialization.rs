@@ -940,7 +940,8 @@ impl<T: SimdRealField> Rotation3<T> {
 
     /// Euler angles corresponding to this rotation from a rotation.
     ///
-    /// The angles are produced in the form (roll, pitch, yaw).
+    /// The angles are produced in the form (roll, pitch, yaw),
+    /// which are expressed in radians.
     ///
     /// # Example
     /// ```
