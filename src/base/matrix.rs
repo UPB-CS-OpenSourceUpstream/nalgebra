@@ -2132,7 +2132,7 @@ impl<T: Scalar + Field, S: RawStorage<T, U3>> Vector<T, U3, S> {
 }
 
 impl<T: SimdComplexField, R: Dim, C: Dim, S: Storage<T, R, C>> Matrix<T, R, C, S> {
-    /// The smallest angle between two vectors.
+    /// The smallest angle between two vectors. The value is expressed in radians.
     #[inline]
     #[must_use]
     pub fn angle<R2: Dim, C2: Dim, SB>(&self, other: &Matrix<T, R2, C2, SB>) -> T::SimdRealField
