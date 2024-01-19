@@ -414,6 +414,8 @@ where
     }
 
     /// Creates a new rotation from Euler angles.
+    /// 
+    /// Note that the angles are expressed in radians.
     ///
     /// The primitive rotations are applied in order: 1 roll − 2 pitch − 3 yaw.
     ///
@@ -938,7 +940,8 @@ impl<T: SimdRealField> Rotation3<T> {
 
     /// Euler angles corresponding to this rotation from a rotation.
     ///
-    /// The angles are produced in the form (roll, pitch, yaw).
+    /// The angles are produced in the form (roll, pitch, yaw),
+    /// which are expressed in radians.
     ///
     /// # Example
     /// ```
