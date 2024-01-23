@@ -2356,3 +2356,30 @@ impl<T> super::alias::Matrix1<T> {
         scalar
     }
 }
+
+/// Provides methods for transforming a matrix into a vector with different algorithms
+impl<T, R: Dim, C: Dim, S: Storage<T, R, C>> Matrix<T, R, C, S> 
+where
+    T: Clone,
+{
+    /// Converts matrix into a vector by concatenating rows
+    pub fn into_vec(&self) -> Vec<T> {
+        let (num_rows, num_columns) = self.shape();
+        let mut resulted_vector = Vec::with_capacity(num_rows * num_columns);
+
+        for i in 0..num_rows {
+            for j in 0..num_columns {
+                // SAFETY: by design, self is in valid state to call self.get_unchecked. Since
+                // (num_rows, num_columns) is the size of the matrix, loops assure that i and j
+                // are in bounds, so the use of get_unchecked will optimize the program, without
+                // creating memory issues. Operations clone and push are safe by default, exceeding
+                // the vector capacity determining automatic realloc.
+                resulted_vector.push(unsafe { self.get_unchecked((i, j)) }.clone());
+            }
+        }
+
+        resulted_vector
+    }
+}
+
+
